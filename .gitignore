@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# Generated RAG outputs (backups / scratch only)
+rag_data/**/*.bak*
+rag_data/test_split_one/
+log/
+*.log
+
+# Local model cache (download on server, do not commit)
+models/
+
+# IDE / editor
+.DS_Store
+.cursor/
+.ipynb_checkpoints/
+.gradio/
+.vscode/
+.idea/
+
+# Secrets
+.env
+**/.env

@@ -1,0 +1,3 @@
+# thinkdepth 等已有 ML 环境通常已具备 chromadb / fastapi / gradio / torch 等
+# 服务器部署时一般只需补装：
+FlagEmbedding>=1.2.0

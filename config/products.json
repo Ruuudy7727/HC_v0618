@@ -1,0 +1,99 @@
+{
+  "series": [
+    {
+      "id": "aqua-e",
+      "name": "Aqua-E",
+      "products": [
+        {
+          "id": "aqua-e-261-125-2h-cn",
+          "display_name": "Aqua-E 261-125-2h CN",
+          "manual_pdf": "Aqua-E_261-125-2h_CN_用户手册_zh-cn.pdf",
+          "md_stem": "Aqua-E_261-125-2h_CN_用户手册_zh-cn",
+          "aliases": ["Aqua-E 261-125-2h", "261-125-2h CN", "Aqua-E 261-125-2h CN"]
+        },
+        {
+          "id": "aqua-e-261-125-2h-cn-pro",
+          "display_name": "Aqua-E 261-125-2h CN Pro",
+          "manual_pdf": "Aqua-E-261-125-2h-CN_Pro_用户手册_zh-cn.pdf",
+          "md_stem": "Aqua-E-261-125-2h-CN_Pro_用户手册_zh-cn",
+          "aliases": ["Aqua-E 261-125-2h Pro", "261-125-2h CN Pro", "Aqua-E 261-125-2h CN Pro"]
+        },
+        {
+          "id": "aqua-e-522-250-2h-cn",
+          "display_name": "Aqua-E 522-250-2h CN",
+          "manual_pdf": "Aqua-E_522-250-2h_CN_用户手册_zh-cn.pdf",
+          "md_stem": "Aqua-E_522-250-2h_CN_用户手册_zh-cn",
+          "aliases": ["Aqua-E 522-250-2h", "522-250-2h CN", "Aqua-E 522-250-2h CN"]
+        },
+        {
+          "id": "aqua-e-522-125-4h-cn",
+          "display_name": "Aqua-E 522-125-4h CN",
+          "manual_pdf": "Aqua-E_522-125-4h_CN_用户手册_zh-cn.pdf",
+          "md_stem": "Aqua-E_522-125-4h_CN_用户手册_zh-cn",
+          "aliases": ["Aqua-E 522-125-4h", "522-125-4h CN", "Aqua-E 522-125-4h CN"]
+        },
+        {
+          "id": "aqua-e-522-250-2h-cn-pro",
+          "display_name": "Aqua-E 522-250-2h CN Pro",
+          "manual_pdf": "Aqua-E_522-250-2h_CN_Pro_用户手册_zh-cn.pdf",
+          "md_stem": "Aqua-E_522-250-2h_CN_Pro_用户手册_zh-cn",
+          "aliases": ["Aqua-E 522-250-2h Pro", "522-250-2h CN Pro", "Aqua-E 522-250-2h CN Pro"]
+        },
+        {
+          "id": "aqua-em-261-125-2h-cn",
+          "display_name": "Aqua-EM 261-125-2h CN",
+          "manual_pdf": "Aqua-EM_261-125-2h_CN_Pro_用户手册_zh-cn.pdf",
+          "md_stem": "Aqua-EM_261-125-2h_CN_Pro_用户手册_zh-cn",
+          "aliases": ["Aqua-EM 261-125-2h", "Aqua-EM 261-125-2h CN"]
+        },
+        {
+          "id": "aqua-me-522-250-2h-cn",
+          "display_name": "Aqua-ME 522-250-2h CN",
+          "manual_pdf": "Aqua-ME_522-250-2h_CN_用户手册_zh-CN.pdf",
+          "md_stem": "Aqua-ME_522-250-2h_CN_用户手册_zh-CN",
+          "aliases": ["Aqua-ME 522-250-2h", "Aqua-ME 522-250-2h CN"]
+        },
+        {
+          "id": "aqua-me-261-125-2h-cn",
+          "display_name": "Aqua-ME 261-125-2h CN",
+          "manual_pdf": "Aqua-ME_261-125-2h_CN_用户手册_zh-CN.pdf",
+          "md_stem": "Aqua-ME_261-125-2h_CN_用户手册_zh-CN",
+          "aliases": ["Aqua-ME 261-125-2h", "Aqua-ME 261-125-2h CN"]
+        }
+      ]
+    },
+    {
+      "id": "aqua-x",
+      "name": "Aqua-X",
+      "products": [
+        {
+          "id": "aqua-ex-261-125-100-cn",
+          "display_name": "Aqua-EX 261-125-100 CN",
+          "manual_pdf": "Aqua-EX_261-125-100_CN_用户手册_zh-cn.pdf",
+          "md_stem": "Aqua-EX_261-125-100_CN_用户手册_zh-cn",
+          "aliases": ["Aqua-EX 261-125-100", "Aqua-EX 261-125-100 CN"]
+        },
+        {
+          "id": "aqua-mx-261-125-2h-cn",
+          "display_name": "Aqua-MX 261-125-2h CN",
+          "manual_pdf": "Aqua-MX_261-125-2h_CN_用户手册_zh-CN.pdf",
+          "md_stem": "Aqua-MX_261-125-2h_CN_用户手册_zh-CN",
+          "aliases": ["Aqua-MX 261-125-2h", "Aqua-MX 261-125-2h CN"]
+        }
+      ]
+    },
+    {
+      "id": "combiner",
+      "name": "汇流柜",
+      "products": [
+        {
+          "id": "clmg-1125",
+          "display_name": "CLMG-1125",
+          "manual_pdf": "CLMG-1125_用户手册_zh-cn.pdf",
+          "md_stem": "CLMG-1125_用户手册_zh-cn",
+          "aliases": ["CLMG-1125", "汇流柜", "CLMG 1125"]
+        }
+      ]
+    }
+  ]
+}
