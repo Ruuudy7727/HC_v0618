@@ -252,6 +252,16 @@ def _infer_chunk_type(section_title: str, section_path: str) -> str:
     return "general"
 
 
+def _is_standalone_section(block: RawBlock) -> bool:
+    """未编号但自带较长正文的 # 块，视为独立章节（平台操作指南常见）。"""
+    if block.block_type != "plain":
+        return False
+    if _parse_numbered_title(block.title):
+        return True
+    body = _body_without_title(block.content)
+    return len(body) >= 40
+
+
 def _blocks_to_content(blocks: List[RawBlock]) -> str:
     return "\n\n".join(b.content.strip() for b in blocks if b.content.strip())
 
@@ -344,6 +354,12 @@ def _merge_blocks(blocks: List[RawBlock]) -> List[MergedChunk]:
             continue
 
         # plain 或未编号块（如 LED 指示灯）：并入当前章节
+        if block.block_type == "plain" and _is_standalone_section(block) and buffer:
+            flush()
+            buffer = [block]
+            anchor_title = block.title
+            anchor_num = None
+            continue
         if buffer:
             buffer.append(block)
         else:

@@ -11,18 +11,20 @@ from typing import Any, Dict, List
 
 # 话题桶：章节标题/path 含任一关键词则归入该桶
 _TOPIC_BUCKETS: Dict[str, List[str]] = {
-    "安装": ["固定安装", "安装工具", "安装环境", "安装地点", "地基", "防护措施", "电气接线准备"],
-    "运输": ["运输", "叉车", "起吊", "吊装", "运输条件", "起吊作业"],
-    "接线": ["接线", "端子", "接地", "等电位", "铜线", "热缩", "电气连接", "交流接线"],
-    "上电": ["上电", "开机", "投运", "启动"],
-    "下电": ["下电", "停机", "断电", "停运"],
-    "维护": ["维护", "更换", "检修", "保养", "清洁", "准备工具"],
-    "故障": ["故障", "事件", "排查", "告警码"],
-    "概述": ["产品概述", "外观", "机械参数", "内部设计", "产品描述"],
+    "登录": ["登录", "注册", "账号", "密码", "验证码", "退出"],
+    "设备": ["设备", "电站", "绑定", "添加", "解绑", "分组", "站点"],
+    "监控": ["监控", "实时", "曲线", "数据", "SOC", "功率", "运行状态", "首页"],
+    "告警": ["告警", "报警", "故障", "异常", "事件", "提醒"],
+    "报表": ["报表", "统计", "导出", "下载", "历史数据"],
+    "权限": ["权限", "角色", "用户管理", "组织", "成员"],
+    "工单": ["工单", "维修", "派工", "验收", "安装维修"],
+    "反馈": ["反馈", "帮助中心", "产品咨询", "产品问题"],
+    "场站": ["场站", "建站", "站点", "SN", "防逆流", "工作模式"],
+    "概述": ["概述", "简介", "功能", "平台介绍", "使用说明", "模块", "操作指南"],
 }
 
 _SKIP_CHUNK_TYPES = {"toc", "meta"}
-_SKIP_SECTION_RE = re.compile(r"^目录|商标|读者对象|修订记录")
+_SKIP_SECTION_RE = re.compile(r"^目录|修订记录|版本记录")
 
 
 def _bucket_for_chunk(section_title: str, section_path: str, chunk_type: str) -> List[str]:
@@ -56,13 +58,9 @@ def build_section_index(kv_store: Dict[str, Dict[str, Any]]) -> Dict[str, Dict[s
         if not buckets:
             continue
         prod = index.setdefault(pid, {k: [] for k in _TOPIC_BUCKETS})
-        label = title
-        if path and title not in path:
-            label = f"{path.split('>')[-1].strip()} {title}".strip()
         for bucket in buckets:
             if title not in prod[bucket]:
                 prod[bucket].append(title)
-    # 去掉空桶
     for pid in list(index.keys()):
         index[pid] = {k: v for k, v in index[pid].items() if v}
     return index

@@ -30,3 +30,6 @@ models/
 # Secrets
 .env
 **/.env
+
+# Word lock files
+~$*

@@ -30,7 +30,7 @@ KB_IMAGES_DIR = PROJECT_ROOT / "rag_data" / "all" / "images"
 KB_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
 
 # Gradio Dropdown 元组格式为 (显示名, 传值)
-GENERAL_OPTION = ("通用问答（全部产品）", "")
+GENERAL_OPTION = ("通用问答（全部指南）", "")
 
 
 def build_product_choices() -> List[Tuple[str, str]]:
@@ -99,30 +99,30 @@ def build_demo() -> gr.Blocks:
     choice_values = [c[1] for c in choices]
     id_to_label = dict(zip(choice_values, choice_labels))
 
-    with gr.Blocks(title="科陆用户手册智能问答") as demo:
-        gr.Markdown("# 科陆用户手册智能问答")
-        gr.Markdown("支持通用问答，也可选择指定产品后仅在对应手册内检索。")
+    with gr.Blocks(title="户储平台使用指南智能问答") as demo:
+        gr.Markdown("# 户储平台使用指南智能问答")
+        gr.Markdown("支持通用问答，也可选择指定文档后在对应章节内检索。")
 
         with gr.Row():
             with gr.Column(scale=1):
                 product_dropdown = gr.Dropdown(
                     choices=choices,
                     value=None,
-                    label="产品选择",
+                    label="文档选择",
                     allow_custom_value=False,
                     interactive=True,
                 )
-                current_product = gr.Markdown("当前模式：**通用问答（全部产品）**")
+                current_product = gr.Markdown("当前模式：**通用问答（全部指南）**")
             with gr.Column(scale=3):
                 chatbot = gr.Chatbot(label="对话", height=480, render_markdown=True, type="messages")
                 sources_box = gr.Markdown("")
                 with gr.Row():
-                    msg = gr.Textbox(label="输入问题", scale=4, placeholder="例如：电池过放如何处理？")
+                    msg = gr.Textbox(label="输入问题", scale=4, placeholder="例如：如何登录平台？如何查看告警？")
                     send = gr.Button("发送", variant="primary")
 
         def on_product_change(product_id: Optional[str]):
             if not product_id:
-                return "当前模式：**通用问答（全部产品）**"
+                return "当前模式：**通用问答（全部指南）**"
             label = id_to_label.get(product_id, product_id)
             return f"当前模式：**{label}**"
 
@@ -144,7 +144,7 @@ def build_demo() -> gr.Blocks:
 
 def create_app() -> FastAPI:
     demo = build_demo()
-    fastapi_app = FastAPI(title="科陆用户手册智能问答")
+    fastapi_app = FastAPI(title="户储平台使用指南智能问答")
     fastapi_app.mount("/kb_images", StaticFiles(directory=str(KB_IMAGES_DIR)), name="kb_images")
     return gr.mount_gradio_app(fastapi_app, demo, path="/")
 

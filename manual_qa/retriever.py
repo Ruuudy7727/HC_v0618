@@ -21,86 +21,69 @@ _KB_IMAGES_ROOT = Path(__file__).resolve().parent.parent / "rag_data" / "all"
 # ────────────────────────────────────────────────────────────────────────────
 # 话题触发器：正则 → section_index.json 中的桶名（自动扩展子查询）
 _TOPIC_TRIGGERS: List[Tuple[re.Pattern, str]] = [
-    (re.compile(r"如何安装|安装方法|安装步骤|机械安装|怎么安装|安装流程|安装过程|安装要求|安装 ?储能|安装操作"), "安装"),
-    (re.compile(r"如何接线|接线步骤|电气连接|配线|线缆|交流接线|怎么接线|接线方法|接线顺序"), "接线"),
-    (re.compile(r"上电|开机|启动|投运|运行调试|怎么开|如何开"), "上电"),
-    (re.compile(r"下电|关机|停机|断电|停运|如何关"), "下电"),
-    (re.compile(r"维护|保养|维修|更换|检修|定期检查"), "维护"),
-    (re.compile(r"故障|报警|告警|事件|排查|错误|异常|不正常"), "故障"),
-    (re.compile(r"运输|搬运|叉车|起吊|移动"), "运输"),
-    (re.compile(r"电池|储能系统|储能容量|放电容量|充放电|SOC|电量|电芯"), "概述"),
+    (re.compile(r"登录|注册|账号|密码|验证码|忘记密码|退出登录|怎么登|如何登"), "登录"),
+    (re.compile(r"添加设备|绑定设备|设备管理|解绑|新建电站|站点|分组|怎么添加"), "设备"),
+    (re.compile(r"监控|实时数据|运行状态|曲线|SOC|功率|首页|怎么看数据|数据查看"), "监控"),
+    (re.compile(r"告警|报警|故障|异常|事件|提醒|怎么处理|如何排查"), "告警"),
+    (re.compile(r"报表|统计|导出|下载|历史数据|数据导出"), "报表"),
+    (re.compile(r"权限|角色|用户管理|组织|成员|账号管理"), "权限"),
+    (re.compile(r"工单|维修|派工|验收|安装维修"), "工单"),
+    (re.compile(r"反馈|帮助中心|产品咨询|产品问题"), "反馈"),
+    (re.compile(r"场站|建站|站点|SN码|防逆流|工作模式"), "场站"),
+    (re.compile(r"平台介绍|功能介绍|是什么|怎么用|使用说明|模块介绍|操作指南"), "概述"),
 ]
 
 # 无 section_index 或桶为空时的静态兜底子查询
 _TOPIC_FALLBACK: Dict[str, List[str]] = {
-    "安装": ["3.5 固定安装", "4.4.1 安装工具", "3.4.1 安装地点选择", "3.4 安装环境要求"],
-    "运输": ["3.2 叉车运输", "3.3.2 起吊作业", "3.1 运输条件"],
-    "接线": ["接线总览 交流输出接线", "制作接线端子 铜线接入", "接地连接 等电位"],
-    "上电": ["上电步骤 上电前检查"],
-    "下电": ["下电操作 停机"],
-    "维护": ["维护说明 更换防雷器"],
-    "故障": ["事件 故障排查 告警码"],
-    "概述": ["产品概述 外观介绍 机械参数"],
+    "登录": ["登录", "注册", "忘记密码", "账号"],
+    "设备": ["设备管理", "添加设备", "绑定", "电站"],
+    "监控": ["监控", "实时数据", "运行状态", "首页"],
+    "告警": ["告警", "报警", "故障", "事件"],
+    "报表": ["报表", "统计", "导出", "历史数据"],
+    "权限": ["权限", "角色", "用户管理"],
+    "工单": ["工单", "新增工单", "维修", "验收"],
+    "反馈": ["反馈", "帮助中心", "产品咨询"],
+    "场站": ["创建场站", "建站", "场站设置", "SN码"],
+    "概述": ["平台介绍", "功能介绍", "使用说明", "操作指南"],
 }
 
 _SECTION_INDEX_PATH = Path(__file__).resolve().parent.parent / "rag_data" / "all" / "section_index.json"
 _section_index_cache: Optional[Dict[str, Dict[str, List[str]]]] = None
 
 _INTRO_QUERY_RE = re.compile(
-    r"(介绍|概述|概况|是什么|什么样|功能|特点|用途|简介|讲讲|说说|这个设备|该产品)"
+    r"(介绍|概述|概况|是什么|什么样|功能|特点|用途|简介|讲讲|说说|这个平台|平台怎么用)"
 )
 _OVERVIEW_SECTION_KEYWORDS = (
-    "产品概述",
-    "产品描述",
-    "外观介绍",
-    "机械参数",
-    "内部设计",
-    "核心功能",
-    "产品信息概述",
-    "读者对象",
+    "平台介绍",
+    "功能介绍",
+    "使用说明",
+    "概述",
+    "简介",
+    "模块",
+    "首页",
 )
 _LOW_VALUE_SECTIONS: Set[str] = {
     "目录",
-    "注意",
-    "警告",
-    "危险",
-    "告警",
-    "A 告警",
-    "！ 告警",
-    "商标",
-    "软件授权",
-    "证据",
-    "条件",
-    "手册警示符号",
-    "科陆",
+    "修订记录",
+    "版本记录",
 }
-# 话题相关性：如果 section_title 包含这些词，说明与安装话题相关
-_INSTALL_TOPIC_KEYWORDS = (
-    "安装", "固定", "地基", "地点", "运输", "起吊",
-    "接线", "电气", "工具", "端子",
-)
-_OPERATION_TOPIC_KEYWORDS = (
-    "上电", "下电", "开机", "停机", "启动", "投运",
-)
-_INSTALL_BOOST_KEYWORDS = (
-    "固定安装", "安装工具", "安装环境", "安装地点", "地基", "电气接线准备",
-)
-_INSTALL_OFF_TOPIC_KEYWORDS = (
-    "质保", "免责", "商标", "软件授权", "证据", "目录",
-)
-_FAULT_BOOST_KEYWORDS = (
-    "故障排查", "故障", "事件", "告警", "报警", "排查", "异常",
-)
-_FAULT_OFF_TOPIC_KEYWORDS = (
-    "质量保证", "免责", "质保", "维护项目", "维护周期", "运行和调试",
-    "运行调试", "商标", "软件授权", "证据", "目录",
-)
-_MAINT_BOOST_KEYWORDS = (
-    "维护", "保养", "更换", "检修", "周期", "清洁",
-)
-_MAINT_OFF_TOPIC_KEYWORDS = (
-    "质量保证", "免责", "质保", "故障排查", "安装", "商标",
-)
+_TOPIC_BOOST_KEYWORDS: Dict[str, Tuple[str, ...]] = {
+    "登录": ("登录", "注册", "密码", "账号", "验证码"),
+    "设备": ("设备", "绑定", "添加", "电站", "站点", "分组"),
+    "监控": ("监控", "实时", "曲线", "数据", "SOC", "功率", "首页"),
+    "告警": ("告警", "报警", "故障", "异常", "事件", "排查"),
+    "报表": ("报表", "统计", "导出", "下载", "历史"),
+    "权限": ("权限", "角色", "用户", "组织", "成员"),
+    "概述": ("概述", "介绍", "功能", "说明", "模块"),
+}
+_TOPIC_OFF_TOPIC_KEYWORDS: Dict[str, Tuple[str, ...]] = {
+    "登录": ("报表", "导出", "权限"),
+    "设备": ("登录", "注册", "报表"),
+    "监控": ("登录", "注册", "权限"),
+    "告警": ("登录", "注册", "报表导出"),
+    "报表": ("登录", "注册", "密码"),
+    "权限": ("监控", "曲线", "SOC"),
+}
 # context 中内容太短且不含表格/图片的 chunk 跳过
 _CONTEXT_MIN_CONTENT_LEN = 60
 # 超短纯噪声 chunk 降权（无图片时）
@@ -166,7 +149,12 @@ def _get_topic_queries(query: str, product_id: Optional[str] = None) -> List[str
     """根据话题检测 + section_index 返回扩展子查询（章节标题）。"""
     extra: List[str] = []
     index = _load_section_index()
-    product_buckets = index.get(product_id or "", {}) if product_id else {}
+    if product_id:
+        product_buckets = index.get(product_id, {})
+    elif len(index) == 1:
+        product_buckets = next(iter(index.values()))
+    else:
+        product_buckets = {}
 
     for pattern, bucket in _TOPIC_TRIGGERS:
         if not pattern.search(query):
@@ -205,29 +193,14 @@ def _postrank(
         score = chunk.score
         if is_intro and any(kw in title for kw in _OVERVIEW_SECTION_KEYWORDS):
             score = min(1.0, score + 0.30)
-        if topic_bucket == "安装":
-            if any(kw in title for kw in _INSTALL_BOOST_KEYWORDS):
+        if topic_bucket in _TOPIC_BOOST_KEYWORDS:
+            if any(kw in title for kw in _TOPIC_BOOST_KEYWORDS[topic_bucket]):
                 score = min(1.0, score + 0.25)
-            if any(kw in title for kw in ("运输", "叉车", "起吊", "吊装")):
-                score = max(0.0, score - 0.20)
-            if any(kw in title for kw in _OPERATION_TOPIC_KEYWORDS):
-                score = max(0.0, score - 0.50)
-            if any(kw in title for kw in _INSTALL_OFF_TOPIC_KEYWORDS):
-                score = max(0.0, score - 0.45)
-        elif topic_bucket == "故障":
-            if any(kw in title for kw in _FAULT_BOOST_KEYWORDS):
-                score = min(1.0, score + 0.25)
-            if any(kw in title for kw in _MAINT_BOOST_KEYWORDS):
-                score = max(0.0, score - 0.30)
-            if any(kw in title for kw in _FAULT_OFF_TOPIC_KEYWORDS):
-                score = max(0.0, score - 0.45)
-        elif topic_bucket == "维护":
-            if any(kw in title for kw in _MAINT_BOOST_KEYWORDS):
-                score = min(1.0, score + 0.25)
-            if any(kw in title for kw in _FAULT_BOOST_KEYWORDS):
-                score = max(0.0, score - 0.15)
-            if any(kw in title for kw in ("质量保证", "免责", "质保", "安装")):
-                score = max(0.0, score - 0.40)
+            off_topic = _TOPIC_OFF_TOPIC_KEYWORDS.get(topic_bucket, ())
+            if any(kw in title for kw in off_topic) and not any(
+                kw in title for kw in _TOPIC_BOOST_KEYWORDS[topic_bucket]
+            ):
+                score = max(0.0, score - 0.35)
         # 精准低价值节名
         if title in _LOW_VALUE_SECTIONS or re.match(r"^目录", title):
             score = max(0.0, score - 0.40)
@@ -236,12 +209,6 @@ def _postrank(
         if (len(body) < _SHORT_CHUNK_THRESHOLD and not chunk.image_paths
                 and "<table" not in body.lower()):
             score = max(0.0, score - 0.25)
-        # 查询话题不匹配：若当前问的是安装但 chunk 是操作类，轻微降权
-        if topic_re is not None:
-            # 检测 chunk 是否属于明显偏离话题的操作章节
-            is_op = any(kw in title for kw in _OPERATION_TOPIC_KEYWORDS)
-            if is_op and not topic_re.search(title):
-                score = max(0.0, score - 0.20)
         reranked.append(replace(chunk, score=score))
     reranked.sort(key=lambda c: c.score, reverse=True)
     return reranked
@@ -258,23 +225,17 @@ def _apply_topic_hard_filter(
     """话题硬过滤：剔除与当前意图明显无关的章节。"""
     if not topic_bucket:
         return chunks
+    boost_keywords = _TOPIC_BOOST_KEYWORDS.get(topic_bucket, ())
+    off_topic = _TOPIC_OFF_TOPIC_KEYWORDS.get(topic_bucket, ())
     filtered: List[RetrievedChunk] = []
     for chunk in chunks:
         title = (chunk.section_title or "").strip()
-        if topic_bucket == "安装":
-            if (
-                (_title_has_any(title, _OPERATION_TOPIC_KEYWORDS) or _title_has_any(title, _INSTALL_OFF_TOPIC_KEYWORDS))
-                and not _title_has_any(title, _INSTALL_TOPIC_KEYWORDS)
-            ):
-                continue
-        elif topic_bucket == "故障":
-            if _title_has_any(title, ("质量保证", "免责", "质保", "商标", "软件授权")):
-                continue
-            if _title_has_any(title, ("运行和调试", "运行调试")) and not _title_has_any(title, _FAULT_BOOST_KEYWORDS):
-                continue
-        elif topic_bucket == "维护":
-            if _title_has_any(title, ("质量保证", "免责", "质保")):
-                continue
+        if (
+            boost_keywords
+            and _title_has_any(title, off_topic)
+            and not _title_has_any(title, boost_keywords)
+        ):
+            continue
         filtered.append(chunk)
     return filtered
 
@@ -333,15 +294,15 @@ def hybrid_search(
     k = top_k or int(os.getenv("RETRIEVAL_TOP_K", "6"))
 
     is_intro = product_id and _is_product_intro_query(query)
-    topic_extras = _get_topic_queries(query, product_id) if product_id else []
+    topic_extras = _get_topic_queries(query, product_id)
     boost_ids = None if product_id else match_products_in_query(query)
 
     # 构造所有查询：原始 + 介绍类扩展 + 话题类扩展
     base_queries: List[str] = [query]
     if is_intro:
         base_queries += [
-            f"{query} 产品概述 产品描述 外观设计 机械参数 功能 应用场景",
-            "2.1 产品概述 2.2 外观介绍 2.3 机械参数 2.4 内部设计",
+            f"{query} 平台介绍 功能介绍 使用说明 模块",
+            "平台概述 功能模块 首页 使用指南",
         ]
     base_queries += topic_extras
     queries = list(dict.fromkeys(base_queries))
