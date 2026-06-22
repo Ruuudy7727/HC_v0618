@@ -1,0 +1,19 @@
+{
+  "residential-platform-guide": {
+    "登录": [
+      "1. 用户登录",
+      "2.服务商注册"
+    ],
+    "工单": [
+      "10.工单"
+    ],
+    "反馈": [
+      "11.反馈"
+    ],
+    "场站": [
+      "3.创建场站（服务商）",
+      " 设置（Setting) 场站设置（Plant Setup) 开关机 （Power on/off)",
+      "设置（Setting) 场站设置（Plant Setup) 开关机（Power on/off)"
+    ]
+  }
+}

@@ -1,0 +1,1159 @@
+[
+    {
+        "type": "text",
+        "text": "商储平台操作指南",
+        "text_level": 1,
+        "bbox": [
+            376,
+            90,
+            623,
+            116
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "1. 用户登录",
+        "text_level": 1,
+        "bbox": [
+            149,
+            146,
+            289,
+            167
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "业主向经销商提供注册的邮箱及手机号码；",
+        "bbox": [
+            147,
+            197,
+            510,
+            214
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "安装商新建场站，并为用户绑定设备；",
+        "bbox": [
+            147,
+            219,
+            477,
+            235
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "image",
+        "img_path": "images/459379793dce950011de11b5d9d290e98a223cb003bca7c1e1109b155779bca2.jpg",
+        "image_caption": [
+            ""
+        ],
+        "image_footnote": [],
+        "bbox": [
+            147,
+            241,
+            848,
+            456
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "经销商在商储平台新建用户账号，并设定初始密码；",
+        "bbox": [
+            149,
+            499,
+            583,
+            516
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "image",
+        "img_path": "images/366ba6706fb9c7fa208dec8d9867eeb692595a22cec6c1600036cbbc0bb66392.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            152,
+            521,
+            840,
+            770
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "业主打开 APP 点击“登录”，首次登录，提示用户去重置密码；",
+        "bbox": [
+            146,
+            781,
+            673,
+            797
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "image",
+        "img_path": "images/7ebf4da35e7eee68fadee191a04b90ac5ae4a591ccbb8bff0b70fdc20ec8f2c9.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            243,
+            86,
+            752,
+            395
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "用户登录后，加载其场站设备信息。",
+        "bbox": [
+            149,
+            404,
+            458,
+            420
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "2.服务商注册",
+        "text_level": 1,
+        "bbox": [
+            147,
+            482,
+            304,
+            505
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "打开 APP 点击“注册”，进入注册界面",
+        "bbox": [
+            147,
+            533,
+            490,
+            550
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "image",
+        "img_path": "images/353ac95fc38ba54defaf7e62dd741aee74eae9065787f0a48c144caed72c0f50.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            383,
+            554,
+            615,
+            862
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "选择根据自身定位，选择”经销商“或“安装商” ",
+        "bbox": [
+            147,
+            870,
+            569,
+            887
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "image",
+        "img_path": "images/9b078badc0808945f7b57d5b17c4eb45430b465413068b40ec43e0e447841643.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            381,
+            83,
+            615,
+            397
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "输入邮箱、营业证书、联系人、联系电话、公司名称、地址等信息（安装商需多提供电力施工资质，如电工证）",
+        "bbox": [
+            147,
+            404,
+            852,
+            442
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "image",
+        "img_path": "images/513554c2d8377f26307540f648f6467d87a19ba1058d2c37fffa1cc89a86ff62.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            147,
+            443,
+            838,
+            755
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "点击确认，注册成功。",
+        "bbox": [
+            149,
+            763,
+            352,
+            780
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "3.创建场站（服务商）",
+        "text_level": 1,
+        "bbox": [
+            149,
+            878,
+            393,
+            900
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "登录 APP",
+        "bbox": [
+            149,
+            91,
+            255,
+            105
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "打开 APP 点击场站按钮，点击场站列表右上角 $^ { \\prime \\prime } { } + ^ { \\prime \\prime }$ 按钮；",
+        "bbox": [
+            147,
+            111,
+            630,
+            127
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "image",
+        "img_path": "images/f764d926d064c59a61b858f76ac9d4b7ce63d8441f34ece62048f5c06f63d9e7.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            262,
+            130,
+            736,
+            439
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "扫描随箱资料上的 SN码标签或逆变器的 SN 码；",
+        "bbox": [
+            147,
+            448,
+            552,
+            463
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "输入场站业的信息及邮箱、地址等信息，点击“下一步”；",
+        "bbox": [
+            147,
+            469,
+            635,
+            486
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "image",
+        "img_path": "images/e10205237bfbc83dc6943d931a22f699ae86b862e8e4912c08f9328df76bdce5.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            147,
+            507,
+            836,
+            818
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "显示当前站点已添加的设备，点击”下一步”;（如有没有检测与添加的设备，可先跳过）；",
+        "bbox": [
+            152,
+            827,
+            848,
+            844
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "输入场站的参数，是否防逆流、工作模式，备电 SOC，充放电上下限及自定义并离网的设置，点击“下一步”；",
+        "bbox": [
+            146,
+            848,
+            852,
+            885
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "自检，检测云平台连接、网络状态及直流侧、通讯及储能的状态，通过点击“下一步”；",
+        "bbox": [
+            144,
+            891,
+            850,
+            908
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "image",
+        "img_path": "images/977328f9478dec0bd57b4e7ae5909c3566d35ba8d01965c7d4512fc9932b0788.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            181,
+            85,
+            820,
+            395
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "确认设定的参数，建站成功。",
+        "bbox": [
+            149,
+            405,
+            406,
+            420
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "4. 关机操作",
+        "text_level": 1,
+        "bbox": [
+            147,
+            466,
+            285,
+            488
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": " 设置（Setting) 场站设置（Plant Setup) 开关机 （Power on/off)",
+        "text_level": 1,
+        "bbox": [
+            144,
+            499,
+            786,
+            517
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "image",
+        "img_path": "images/3de044f0d42b9d3b9ab507d499700342082889b143a6c98caa0c3203cb022b6a.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            262,
+            520,
+            734,
+            828
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "确认提示：",
+        "bbox": [
+            149,
+            835,
+            268,
+            852
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "确定关机？系统将停止运行。点 确认系统安全停机流程：",
+        "bbox": [
+            147,
+            857,
+            546,
+            896
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "先降功率 断并网 / 离网输出停止 $\\mathsf { P C S } $ 断开 DC 主继电器BMS 下电 系统进入待机（Standby）",
+        "bbox": [
+            216,
+            87,
+            569,
+            148
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": " APP 显示：已关机（Off）、所有功率为 $\\ r _ { 0 } $ 关机完成。",
+        "bbox": [
+            147,
+            152,
+            675,
+            171
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "5. 开机操作",
+        "text_level": 1,
+        "bbox": [
+            147,
+            215,
+            285,
+            236
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "设置（Setting) 场站设置（Plant Setup) 开关机（Power on/off)",
+        "text_level": 1,
+        "bbox": [
+            149,
+            247,
+            746,
+            266
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "image",
+        "img_path": "images/19dc5922e22b8260b10e01c68b5d845779c172f7270c05dab289d44963c0c03b.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            262,
+            269,
+            734,
+            577
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "确认提示：",
+        "bbox": [
+            149,
+            585,
+            268,
+            601
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "确定开机？系统将自检并启动。点 确认（Confirm）",
+        "bbox": [
+            206,
+            606,
+            663,
+            624
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": " 系统自动执行：",
+        "bbox": [
+            149,
+            627,
+            310,
+            644
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "BMS/ 电池自检 DC 预充、母线升压 →PCS 启动、并网 / 待机",
+        "bbox": [
+            166,
+            649,
+            791,
+            667
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "$\\bullet$ 开机完成。",
+        "bbox": [
+            147,
+            670,
+            270,
+            688
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "6. 充放电模式切换",
+        "text_level": 1,
+        "bbox": [
+            149,
+            770,
+            363,
+            791
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "在新建场站时已经选择一种运行模式（默认为自发自用模式）。",
+        "bbox": [
+            146,
+            802,
+            707,
+            820
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": " 设置（Setting) 场站设置（Plant Setup) 运行模式（Power on/off)",
+        "bbox": [
+            141,
+            824,
+            786,
+            843
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "image",
+        "img_path": "images/e040d8ad37be3b8de511fa2f5e142ee56ddf933114bdd4a86b4ac8fef6b9aab5.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            151,
+            85,
+            845,
+            397
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": " 点击相应 AI模式、自发自用、按时间充放电的模式后的开关可进行切换。",
+        "bbox": [
+            147,
+            403,
+            828,
+            420
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "$\\bullet$ 系统自动执行：",
+        "bbox": [
+            149,
+            425,
+            310,
+            442
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "选择新的充放电模式后，云端校验后 设备停机/降载 状态自检 新策略加载 功率重启 反馈确认的完整流程",
+        "bbox": [
+            147,
+            445,
+            850,
+            485
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "系统提供新充放电模式切换成功。",
+        "bbox": [
+            149,
+            489,
+            472,
+            506
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "充放电模式设置",
+        "text_level": 1,
+        "bbox": [
+            149,
+            531,
+            294,
+            549
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "点击每个模式可对应设置每个模式的参数",
+        "bbox": [
+            184,
+            552,
+            551,
+            570
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "image",
+        "img_path": "images/eac64b75768b8281544905325244172dd4db492818980198f64d1f0ec75c6f00.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            147,
+            574,
+            810,
+            887
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "7.并离网-并转离（默认自动切换）",
+        "text_level": 1,
+        "bbox": [
+            147,
+            111,
+            465,
+            133
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": " APP 前置检查",
+        "text_level": 1,
+        "bbox": [
+            147,
+            165,
+            304,
+            183
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "电池 $50 C \\geq 5 0 \\%$ （建议 $\\ge 7 0 \\%$ ）无故障告警、系统正常负载功率 $\\leq$ 离网额定功率",
+        "bbox": [
+            179,
+            187,
+            440,
+            247
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": " APP 操作",
+        "bbox": [
+            149,
+            250,
+            262,
+            268
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "1. 进入设置（Setting) 场站设置（Plant Setup) 并离网（Grid connected andoff grid)",
+        "bbox": [
+            146,
+            272,
+            852,
+            311
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "image",
+        "img_path": "images/ff76b35899cfc49ca6c367b4b03da01a18f0ca5402ec3326ba3d862fc099b088.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            383,
+            315,
+            611,
+            623
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": " 点击 切换至离网 确认  \n 输入安全密码（如需）  \n$\\bullet$ 系统执行（后台自动）  \n 停止充放电 断开电网开关  \n PCS 进入离网 VF 模式（建立电压 / 频率）  \n 黑启动成功 带载运行  \n APP 状态显示：离网运行  \n$\\bullet$ 离网后注意仅备电回路供电不可超功率、不可并网观察 SOC，低电量自动停机",
+        "bbox": [
+            146,
+            631,
+            571,
+            863
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "8.并离网-离转并（默认自动切换）",
+        "text_level": 1,
+        "bbox": [
+            147,
+            92,
+            463,
+            114
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "$\\bullet$ 检查条件  \n 电网已恢复、电压 / 频率正常  \n 无故障、电池电量充足  \n 负载不过载  \n$\\bullet$ APP 操作  \n 进入设置（Setting) 场站设置（Plant Setup) 并离网（Grid connected andoff grid)",
+        "bbox": [
+            149,
+            122,
+            855,
+            272
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "image",
+        "img_path": "images/4bd4bf7fe1eab04750cf01cf2c381657d7e0c02d8b3629b39e3bd092757117e6.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            383,
+            275,
+            611,
+            583
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "点击 切换至并网 确认 ",
+        "text_level": 1,
+        "bbox": [
+            183,
+            590,
+            418,
+            607
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "$\\bullet$ 系统执行（后台自动）",
+        "text_level": 1,
+        "bbox": [
+            151,
+            612,
+            376,
+            629
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "离网停机 检测电网  \n锁相（电压 / 频率 / 相位同步）  \n闭合并网开关 并网运行  \nAPP 状态：并网运行",
+        "bbox": [
+            181,
+            633,
+            475,
+            715
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "9.系统自检",
+        "text_level": 1,
+        "bbox": [
+            147,
+            821,
+            272,
+            843
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "image",
+        "img_path": "images/79880ed3097fb99bdfdf091106ff294a2b59aa13c1c1b1a1d215fc02771d936c.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            151,
+            85,
+            847,
+            395
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "自检结果：通过 / 异常",
+        "bbox": [
+            149,
+            403,
+            393,
+            420
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "检测项：电池系统（BMS）检测、逆变器（PCS）检测、电网与电气安全检测、系统与通信检测",
+        "bbox": [
+            151,
+            426,
+            852,
+            463
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "自检完成后返回各模块状态结果，失败则提示用户重新自检或反馈给经销商。",
+        "bbox": [
+            149,
+            469,
+            742,
+            485
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": " APP 操作",
+        "bbox": [
+            149,
+            489,
+            262,
+            506
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "进入设置（Setting) 场站设置（Plant Setup) 自检（Self Inspection)",
+        "bbox": [
+            168,
+            510,
+            825,
+            527
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "跳转到自检界面，点击 开始自检",
+        "bbox": [
+            174,
+            532,
+            480,
+            549
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "自检针对各模块进行检测，成功则显示正常，不成功显示异常，并提示用户重新检查或联系经销商。",
+        "bbox": [
+            178,
+            552,
+            848,
+            593
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "10.工单 ",
+        "text_level": 1,
+        "bbox": [
+            149,
+            623,
+            235,
+            643
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "工单来源由两部分组成，服务商新建、反馈转换",
+        "bbox": [
+            147,
+            656,
+            559,
+            673
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "打开商储云平台，点击菜单服务>工单，点击右上角新增图标",
+        "bbox": [
+            146,
+            705,
+            655,
+            720
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "image",
+        "img_path": "images/6153d0620f49bf53bcee6694898bdd9da99f2d738b186878fd25ee64460eb084.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            655,
+            680,
+            712,
+            718
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "新增工单窗口，输入工单、场站设备、派往场站联系人信息及电话、安装维修人员，点击确认。",
+        "bbox": [
+            146,
+            733,
+            836,
+            770
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "image",
+        "img_path": "images/1b741f4db14e250e41e24102e9141a95619abd53e7a5068287dcc12920708a15.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            299,
+            86,
+            699,
+            454
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "text",
+        "text": "生成一条工单信息，并发送站内信或 APP 推送给到安装维修人员。",
+        "bbox": [
+            218,
+            460,
+            766,
+            476
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "image",
+        "img_path": "images/1ff55d17090a855219c60aac17f18dafc401c6d0e255218944d5048cdbf06c77.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            400,
+            480,
+            631,
+            788
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "text",
+        "text": "工单处理完成后，维修工程师通过 APP 上传工单处理情况及现场照片等信息。",
+        "bbox": [
+            144,
+            796,
+            781,
+            814
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "image",
+        "img_path": "images/7e8639fd7ec160bb64c295bbe338f4f1e1d33fc3631b706aef996469cbfec20c.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            238,
+            84,
+            739,
+            360
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "text",
+        "text": "服务商登录商储平台验收工单情况并关闭工单。 ",
+        "bbox": [
+            147,
+            367,
+            549,
+            385
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "text",
+        "text": "11.反馈 ",
+        "text_level": 1,
+        "bbox": [
+            149,
+            429,
+            235,
+            450
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "text",
+        "text": "登录 APP",
+        "bbox": [
+            149,
+            463,
+            255,
+            479
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "text",
+        "text": "点击服务>帮助中心，点击右下角",
+        "bbox": [
+            147,
+            511,
+            443,
+            526
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "image",
+        "img_path": "images/06c2bcd89dcb9c370647bd656500fcf8bf571caee75e89bbefd3196016cfc763.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            455,
+            488,
+            515,
+            525
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "text",
+        "text": "的反馈按钮，弹出反馈页面",
+        "bbox": [
+            522,
+            511,
+            739,
+            526
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "image",
+        "img_path": "images/0413556b1160ed9f4904639fc56a168682670d12b5dc865f61198cdc9eec710f.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            384,
+            538,
+            615,
+            844
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "text",
+        "text": "用户输入反馈问题的类型，是产品咨询还是产品问题，问题描述图片等上传，反馈列表生成一条反馈记录。",
+        "bbox": [
+            147,
+            856,
+            848,
+            894
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "image",
+        "img_path": "images/7e0abbffcdb8723ddd1cbe2428d8f0c71d2fd4f4bacf7eb1acfa07db3955ec11.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            388,
+            86,
+            610,
+            395
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "image",
+        "img_path": "images/6eda467bffd55d431bab913141b49e14cfd2278135ebc50479e30a7ddfdcff71.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "bbox": [
+            379,
+            429,
+            616,
+            831
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "服务商在反馈列表中查看反馈信息，产品咨询给出解答，产品问题则转成工单信息。",
+        "bbox": [
+            149,
+            405,
+            828,
+            423
+        ],
+        "page_idx": 12
+    }
+]

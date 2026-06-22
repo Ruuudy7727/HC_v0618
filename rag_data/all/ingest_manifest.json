@@ -1,0 +1,23 @@
+{
+  "residential-platform-guide": {
+    "product_id": "residential-platform-guide",
+    "source_pdf": "商储平台使用指南.pdf",
+    "full_doc_id": "doc-355aa712da44fa2e50c9005ca15f7fa5",
+    "chunk_ids": [
+      "chunk-4c24bf169228007ea1f6575a802c5e9c",
+      "chunk-ff2cf932e0591a03f243446c783a829e",
+      "chunk-ac2b43c05131b97fb8ee4dca63701d9e",
+      "chunk-c64736cec780e8fa6254f9d61254499a",
+      "chunk-3c423abe4c57f8659ec3028167f235f2",
+      "chunk-5cea0ac402ed4b18b4000b5c22b3405d",
+      "chunk-c6d3a5813f1bdabb8627a7109f510c63",
+      "chunk-ca2ff64f8be94c5e28516f10f095a5af",
+      "chunk-d01700015bf416b56953581dc6d25252",
+      "chunk-15657bcc7307960678b0d69252a93290",
+      "chunk-d6c972b223c35a262e82e30229fe0214",
+      "chunk-f3f749d89477ff79c223369338816c81"
+    ],
+    "pdf_sha256": "7be9f785f8a3229896e1494a807d5a7fb6d66bc83f92c20785f083b22f7dcb7a",
+    "pdf_mtime": 1782116121.186898
+  }
+}
