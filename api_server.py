@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Optional
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -26,7 +27,7 @@ configure_runtime_network_env()
 
 from config import load_products_config
 from core.local_db import init_local_kb, local_kb_status, reset_local_kb_cache, search_local_kb
-from manual_qa.agent import answer_question
+from manual_qa.agent import answer_question, answer_question_stream
 
 PUBLIC_API_TOKEN = os.getenv("PUBLIC_API_TOKEN", "changeme")
 KB_IMAGES_DIR = PROJECT_ROOT / "rag_data" / "all" / "images"
@@ -91,6 +92,41 @@ async def chat(req: ChatRequest) -> Dict[str, Any]:
         "product_id": result.product_id,
         "display_name": result.display_name,
     }
+
+
+def _chat_stream_events(question: str, product_id: Optional[str]):
+    for event_type, payload in answer_question_stream(question, product_id, None):
+        if event_type == "meta":
+            yield f"event: meta\ndata: {json.dumps(payload, ensure_ascii=False)}\n\n"
+        elif event_type == "delta":
+            yield f"event: delta\ndata: {json.dumps({'text': payload}, ensure_ascii=False)}\n\n"
+        elif event_type == "done":
+            yield (
+                "event: done\n"
+                f"data: {json.dumps({'answer': payload.answer}, ensure_ascii=False)}\n\n"
+            )
+
+
+@app.post("/api/v1/chat/stream")
+async def chat_stream(req: ChatRequest) -> StreamingResponse:
+    verify_token(req.token)
+
+    def event_generator():
+        try:
+            yield from _chat_stream_events(req.question, req.product_id)
+        except Exception as exc:
+            payload = json.dumps({"error": str(exc)}, ensure_ascii=False)
+            yield f"event: error\ndata: {payload}\n\n"
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
 
 
 @app.post("/api/v1/search")

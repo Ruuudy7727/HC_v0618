@@ -3,6 +3,7 @@
 
 import os
 import sys
+import traceback
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -24,7 +25,7 @@ configure_runtime_network_env()
 
 from config import list_all_products
 from core.local_db import init_local_kb
-from manual_qa.agent import answer_question
+from manual_qa.agent import answer_question_stream
 
 KB_IMAGES_DIR = PROJECT_ROOT / "rag_data" / "all" / "images"
 KB_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
@@ -74,23 +75,32 @@ def chat_fn(
     message: str,
     history: List[Dict[str, Any]],
     product_id: Optional[str],
-) -> Tuple[List[Dict[str, Any]], str, str]:
+):
     if not message.strip():
-        return history, "", ""
+        yield history, "", ""
+        return
 
-    result = answer_question(
-        message,
-        product_id=product_id if product_id else None,
-        history=_history_to_text(history),
-    )
-    answer = result.answer
-    sources_md = format_sources(result.sources)
+    history = history + [{"role": "user", "content": message}]
+    partial = ""
+    sources_md = ""
 
-    history = history + [
-        {"role": "user", "content": message},
-        {"role": "assistant", "content": answer},
-    ]
-    return history, "", sources_md
+    try:
+        for event_type, payload in answer_question_stream(
+            message,
+            product_id=product_id if product_id else None,
+            history=_history_to_text(history[:-1]),
+        ):
+            if event_type == "meta":
+                sources_md = format_sources(payload.get("sources", []))
+            elif event_type == "delta":
+                partial += payload
+                yield history + [{"role": "assistant", "content": partial}], "", sources_md
+    except Exception as exc:
+        traceback.print_exc()
+        partial = f"后端处理失败：{exc}"
+        sources_md = ""
+
+    yield history + [{"role": "assistant", "content": partial}], "", sources_md
 
 
 def build_demo() -> gr.Blocks:

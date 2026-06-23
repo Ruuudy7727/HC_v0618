@@ -3,10 +3,10 @@
 
 import os
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Iterator, List, Optional, Tuple
 
 from config import get_product_by_id
-from core.gemini_chat import gemini_chat_once
+from core.gemini_chat import gemini_chat_once, gemini_chat_stream
 from manual_qa.prompts import (
     GENERAL_USER_TEMPLATE,
     NO_RESULT_MESSAGE,
@@ -27,6 +27,16 @@ _MAX_VISION_IMAGES = int(os.getenv("GEMINI_MAX_IMAGES", "5"))
 @dataclass
 class ChatResult:
     answer: str
+    sources: List[Dict[str, Any]] = field(default_factory=list)
+    product_id: Optional[str] = None
+    display_name: str = "全部产品"
+
+
+@dataclass
+class _ChatPrep:
+    early_result: Optional[ChatResult] = None
+    user_prompt: str = ""
+    image_paths: Optional[List[str]] = None
     sources: List[Dict[str, Any]] = field(default_factory=list)
     product_id: Optional[str] = None
     display_name: str = "全部产品"
@@ -53,31 +63,36 @@ def _chunks_to_sources(chunks: List[RetrievedChunk]) -> List[Dict[str, Any]]:
     ]
 
 
-def answer_question(
+def _prepare_chat(
     question: str,
     product_id: Optional[str] = None,
     history: Optional[List[str]] = None,
-) -> ChatResult:
+) -> _ChatPrep:
     question = (question or "").strip()
+    display_name = get_display_name(product_id)
+
     if not question:
-        return ChatResult(
-            answer="请输入问题。",
-            product_id=product_id,
-            display_name=get_display_name(product_id),
+        return _ChatPrep(
+            early_result=ChatResult(
+                answer="请输入问题。",
+                product_id=product_id,
+                display_name=display_name,
+            )
         )
 
     chunks = hybrid_search(question, product_id=product_id)
     if not chunks or chunks[0].score < _min_score():
-        return ChatResult(
-            answer=NO_RESULT_MESSAGE,
-            sources=[],
-            product_id=product_id,
-            display_name=get_display_name(product_id),
+        return _ChatPrep(
+            early_result=ChatResult(
+                answer=NO_RESULT_MESSAGE,
+                sources=[],
+                product_id=product_id,
+                display_name=display_name,
+            )
         )
 
     image_catalog = build_image_catalog(chunks, max_images=_MAX_VISION_IMAGES)
     context = format_context(chunks, catalog=image_catalog)
-    display_name = get_display_name(product_id)
     image_abs_paths = image_catalog.abs_paths
 
     history_block = ""
@@ -98,17 +113,82 @@ def answer_question(
 
     user_prompt += history_block
 
+    return _ChatPrep(
+        user_prompt=user_prompt,
+        image_paths=image_abs_paths or None,
+        sources=_chunks_to_sources(chunks),
+        product_id=product_id,
+        display_name=display_name,
+    )
+
+
+def answer_question(
+    question: str,
+    product_id: Optional[str] = None,
+    history: Optional[List[str]] = None,
+) -> ChatResult:
+    prep = _prepare_chat(question, product_id=product_id, history=history)
+    if prep.early_result:
+        return prep.early_result
+
     answer, _usage = gemini_chat_once(
-        user_prompt,
+        prep.user_prompt,
         SYSTEM_PROMPT,
         temperature=0.2,
         max_tokens=4096,
-        image_paths=image_abs_paths or None,
+        image_paths=prep.image_paths,
     )
 
     return ChatResult(
         answer=answer,
-        sources=_chunks_to_sources(chunks),
-        product_id=product_id,
-        display_name=display_name,
+        sources=prep.sources,
+        product_id=prep.product_id,
+        display_name=prep.display_name,
+    )
+
+
+def answer_question_stream(
+    question: str,
+    product_id: Optional[str] = None,
+    history: Optional[List[str]] = None,
+) -> Iterator[Tuple[str, Any]]:
+    """流式问答。依次 yield:
+    - ('meta', {sources, product_id, display_name})
+    - ('delta', str) 文本增量
+    - ('done', ChatResult) 完整结果
+    """
+    prep = _prepare_chat(question, product_id=product_id, history=history)
+    meta = {
+        "sources": prep.sources,
+        "product_id": prep.product_id,
+        "display_name": prep.display_name,
+    }
+
+    if prep.early_result:
+        yield ("meta", meta)
+        yield ("delta", prep.early_result.answer)
+        yield ("done", prep.early_result)
+        return
+
+    yield ("meta", meta)
+
+    answer_parts: List[str] = []
+    for delta in gemini_chat_stream(
+        prep.user_prompt,
+        SYSTEM_PROMPT,
+        temperature=0.2,
+        max_tokens=4096,
+        image_paths=prep.image_paths,
+    ):
+        answer_parts.append(delta)
+        yield ("delta", delta)
+
+    yield (
+        "done",
+        ChatResult(
+            answer="".join(answer_parts),
+            sources=prep.sources,
+            product_id=prep.product_id,
+            display_name=prep.display_name,
+        ),
     )
