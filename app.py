@@ -31,21 +31,90 @@ from manual_qa.agent import answer_question_stream
 KB_IMAGES_DIR = PROJECT_ROOT / "rag_data" / "all" / "images"
 KB_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
 
-_KB_IMAGE_MD_RE = re.compile(r"!\[([^\]]*)\]\((/kb_images/[^)]+)\)")
+# Gradio 5 不加载相对路径 /kb_images/；需完整 HTTPS URL（推荐）或 gradio_api/file
+GRADIO_PUBLIC_URL = os.getenv("GRADIO_PUBLIC_URL", "").strip().rstrip("/")
+
+_MD_IMAGE_RE = re.compile(r"!\[([^\]]*)\]\(([^)]+)\)")
+_GRADIO_IMAGE_RE = re.compile(r"\[Image:\s*([^\|\]]+)\|\s*([^\]]+)\]")
+_FIGURE_REF_RE = re.compile(r"\[(图-\d+)\]")
+
+
+def _kb_rel_from_url(url: str) -> Optional[str]:
+    raw = (url or "").strip()
+    if raw.startswith("/kb_images/"):
+        return raw[len("/kb_images/") :].lstrip("/")
+    marker = "/kb_images/"
+    idx = raw.find(marker)
+    if idx >= 0:
+        return raw[idx + len(marker) :].lstrip("/")
+    return None
+
+
+def _resolve_image_url(url: str) -> Optional[str]:
+    rel = _kb_rel_from_url(url)
+    if not rel:
+        return None
+    abs_path = (KB_IMAGES_DIR / rel).resolve()
+    if not abs_path.is_file():
+        return None
+    if GRADIO_PUBLIC_URL:
+        return f"{GRADIO_PUBLIC_URL}/kb_images/{rel}"
+    return f"/gradio_api/file={abs_path.as_posix()}"
+
+
+def _to_gradio_image_line(alt: str, url: str) -> str:
+    """Gradio 5 Chatbot 对 [Image: alt | url] 的支持比标准 Markdown 更稳定。"""
+    alt = (alt or "配图").strip()
+    return f"[Image: {alt} | {url}]"
 
 
 def _rewrite_kb_image_urls_for_gradio(text: str) -> str:
-    """Gradio Chatbot 不会加载自定义 /kb_images/ 路由，需转为 gradio_api/file 格式。"""
-
-    def _repl(match: re.Match[str]) -> str:
-        alt, url_path = match.group(1), match.group(2)
-        rel = url_path[len("/kb_images/") :].lstrip("/")
-        abs_path = (KB_IMAGES_DIR / rel).resolve()
-        if not abs_path.is_file():
+    def _repl_md(match: re.Match[str]) -> str:
+        alt, url = match.group(1), match.group(2)
+        resolved = _resolve_image_url(url)
+        if not resolved:
             return match.group(0)
-        return f"![{alt}](/gradio_api/file={abs_path.as_posix()})"
+        return _to_gradio_image_line(alt, resolved)
 
-    return _KB_IMAGE_MD_RE.sub(_repl, text)
+    def _repl_gr(match: re.Match[str]) -> str:
+        alt, url = match.group(1), match.group(2).strip()
+        resolved = _resolve_image_url(url)
+        if not resolved:
+            return match.group(0)
+        return _to_gradio_image_line(alt, resolved)
+
+    text = _MD_IMAGE_RE.sub(_repl_md, text)
+    return _GRADIO_IMAGE_RE.sub(_repl_gr, text)
+
+
+def _inject_catalog_images(text: str, images: List[Dict[str, Any]]) -> str:
+    """将回答中的 [图-N] 引用替换为可显示的 Gradio 图片行。"""
+    if not images:
+        return text
+
+    id_to_url: Dict[str, str] = {}
+    for item in images:
+        image_id = str(item.get("image_id", "") or "").strip()
+        if not image_id:
+            continue
+        resolved = _resolve_image_url(str(item.get("display_url", "") or ""))
+        if resolved:
+            id_to_url[image_id] = resolved
+
+    def _repl_ref(match: re.Match[str]) -> str:
+        image_id = match.group(1)
+        url = id_to_url.get(image_id)
+        if not url or url in text:
+            return match.group(0)
+        return _to_gradio_image_line(image_id, url)
+
+    return _FIGURE_REF_RE.sub(_repl_ref, text)
+
+
+def _prepare_display_text(text: str, images: List[Dict[str, Any]]) -> str:
+    text = _rewrite_kb_image_urls_for_gradio(text)
+    return _inject_catalog_images(text, images)
+
 
 # Gradio Dropdown 元组格式为 (显示名, 传值)
 GENERAL_OPTION = ("通用问答（全部指南）", "")
@@ -100,6 +169,7 @@ def chat_fn(
     history = history + [{"role": "user", "content": message}]
     partial = ""
     sources_md = ""
+    catalog_images: List[Dict[str, Any]] = []
 
     try:
         for event_type, payload in answer_question_stream(
@@ -109,16 +179,18 @@ def chat_fn(
         ):
             if event_type == "meta":
                 sources_md = format_sources(payload.get("sources", []))
+                catalog_images = payload.get("images") or []
             elif event_type == "delta":
                 partial += payload
-                display = _rewrite_kb_image_urls_for_gradio(partial)
+                display = _prepare_display_text(partial, catalog_images)
                 yield history + [{"role": "assistant", "content": display}], "", sources_md
     except Exception as exc:
         traceback.print_exc()
         partial = f"后端处理失败：{exc}"
         sources_md = ""
 
-    yield history + [{"role": "assistant", "content": _rewrite_kb_image_urls_for_gradio(partial)}], "", sources_md
+    final = _prepare_display_text(partial, catalog_images)
+    yield history + [{"role": "assistant", "content": final}], "", sources_md
 
 
 def build_demo() -> gr.Blocks:
@@ -178,13 +250,21 @@ def create_app() -> FastAPI:
         fastapi_app,
         demo,
         path="/",
-        allowed_paths=[str(KB_IMAGES_DIR.resolve())],
+        allowed_paths=[
+            str(KB_IMAGES_DIR.resolve()),
+            str(PROJECT_ROOT.resolve()),
+        ],
     )
 
 
 def main() -> None:
     init_local_kb()
     port = int(os.getenv("GRADIO_PORT", "7860"))
+    if not GRADIO_PUBLIC_URL:
+        print(
+            "[warn] 未设置 GRADIO_PUBLIC_URL，Chatbot 图片将回退为 gradio_api/file。"
+            "建议在 .env 中设置：GRADIO_PUBLIC_URL=https://aiops.szclou.com:50201"
+        )
     uvicorn.run(create_app(), host="0.0.0.0", port=port)
 
 
