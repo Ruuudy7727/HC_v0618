@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import re
 import sys
 import traceback
 from pathlib import Path
@@ -29,6 +30,22 @@ from manual_qa.agent import answer_question_stream
 
 KB_IMAGES_DIR = PROJECT_ROOT / "rag_data" / "all" / "images"
 KB_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+
+_KB_IMAGE_MD_RE = re.compile(r"!\[([^\]]*)\]\((/kb_images/[^)]+)\)")
+
+
+def _rewrite_kb_image_urls_for_gradio(text: str) -> str:
+    """Gradio Chatbot 不会加载自定义 /kb_images/ 路由，需转为 gradio_api/file 格式。"""
+
+    def _repl(match: re.Match[str]) -> str:
+        alt, url_path = match.group(1), match.group(2)
+        rel = url_path[len("/kb_images/") :].lstrip("/")
+        abs_path = (KB_IMAGES_DIR / rel).resolve()
+        if not abs_path.is_file():
+            return match.group(0)
+        return f"![{alt}](/gradio_api/file={abs_path.as_posix()})"
+
+    return _KB_IMAGE_MD_RE.sub(_repl, text)
 
 # Gradio Dropdown 元组格式为 (显示名, 传值)
 GENERAL_OPTION = ("通用问答（全部指南）", "")
@@ -94,13 +111,14 @@ def chat_fn(
                 sources_md = format_sources(payload.get("sources", []))
             elif event_type == "delta":
                 partial += payload
-                yield history + [{"role": "assistant", "content": partial}], "", sources_md
+                display = _rewrite_kb_image_urls_for_gradio(partial)
+                yield history + [{"role": "assistant", "content": display}], "", sources_md
     except Exception as exc:
         traceback.print_exc()
         partial = f"后端处理失败：{exc}"
         sources_md = ""
 
-    yield history + [{"role": "assistant", "content": partial}], "", sources_md
+    yield history + [{"role": "assistant", "content": _rewrite_kb_image_urls_for_gradio(partial)}], "", sources_md
 
 
 def build_demo() -> gr.Blocks:
@@ -156,7 +174,12 @@ def create_app() -> FastAPI:
     demo = build_demo()
     fastapi_app = FastAPI(title="户储平台使用指南智能问答")
     fastapi_app.mount("/kb_images", StaticFiles(directory=str(KB_IMAGES_DIR)), name="kb_images")
-    return gr.mount_gradio_app(fastapi_app, demo, path="/")
+    return gr.mount_gradio_app(
+        fastapi_app,
+        demo,
+        path="/",
+        allowed_paths=[str(KB_IMAGES_DIR.resolve())],
+    )
 
 
 def main() -> None:
