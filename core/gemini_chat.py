@@ -90,8 +90,6 @@ def _build_gemini_body(
     temperature: float,
     max_tokens: int,
     image_paths: Optional[List[str]],
-    *,
-    stream: bool = False,
 ) -> Tuple[Dict, List[Dict], bool]:
     parts = _build_parts(user_text, image_paths)
     body = {
@@ -100,8 +98,6 @@ def _build_gemini_body(
         "systemInstruction": {"parts": [{"text": system_instruction}]},
         "generationConfig": {"temperature": temperature, "maxOutputTokens": max_tokens},
     }
-    if stream:
-        body["stream"] = True
     return body, parts, len(parts) > 1
 
 
@@ -128,11 +124,17 @@ def _post_gemini(headers: Dict, body: Dict) -> Tuple[str, Dict]:
     return text, data.get("usageMetadata", {})
 
 
+def _decode_stream_line(raw_line) -> str:
+    if isinstance(raw_line, bytes):
+        return raw_line.decode("utf-8", errors="replace").strip()
+    return str(raw_line).strip()
+
+
 def _iter_stream_payloads(resp: requests.Response) -> Iterator[Dict]:
-    for raw_line in resp.iter_lines(decode_unicode=True):
+    for raw_line in resp.iter_lines(decode_unicode=False):
         if not raw_line:
             continue
-        line = raw_line.strip()
+        line = _decode_stream_line(raw_line)
         if line.startswith("data:"):
             line = line[5:].strip()
         if not line or line == "[DONE]":
@@ -149,6 +151,16 @@ def _iter_stream_payloads(resp: requests.Response) -> Iterator[Dict]:
             yield payload
 
 
+def _raise_with_response_detail(resp: requests.Response) -> None:
+    try:
+        resp.raise_for_status()
+    except requests.HTTPError as exc:
+        detail = resp.text[:500] if resp.text else ""
+        if detail:
+            raise requests.HTTPError(f"{exc} | response: {detail}", response=resp) from exc
+        raise
+
+
 def _stream_gemini(headers: Dict, body: Dict) -> Iterator[str]:
     resp = requests.post(
         GEMINI_URL_STREAM,
@@ -158,7 +170,7 @@ def _stream_gemini(headers: Dict, body: Dict) -> Iterator[str]:
         stream=True,
         proxies={"http": None, "https": None},
     )
-    resp.raise_for_status()
+    _raise_with_response_detail(resp)
     for payload in _iter_stream_payloads(resp):
         text = _extract_text_from_payload(payload)
         if text:
@@ -220,7 +232,6 @@ def gemini_chat_stream(
         temperature,
         max_tokens,
         image_paths,
-        stream=True,
     )
 
     try:
