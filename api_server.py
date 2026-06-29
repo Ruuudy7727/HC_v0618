@@ -26,10 +26,7 @@ from core.network_env import configure_runtime_network_env
 configure_runtime_network_env()
 
 from config import load_products_config
-from core.kb_image_urls import (
-    public_image_entries,
-    rewrite_kb_image_urls_in_markdown,
-)
+from core.kb_image_urls import public_image_entries
 from core.local_db import init_local_kb, local_kb_status, reset_local_kb_cache, search_local_kb
 from manual_qa.agent import answer_question, answer_question_stream
 
@@ -91,38 +88,25 @@ async def chat(req: ChatRequest) -> Dict[str, Any]:
         None,
     )
     return {
-        "answer": rewrite_kb_image_urls_in_markdown(result.answer),
+        "answer": result.answer,
         "sources": result.sources,
         "product_id": result.product_id,
         "display_name": result.display_name,
     }
 
 
-def _public_stream_payload(event_type: str, payload: Any) -> Any:
-    if event_type == "meta" and isinstance(payload, dict):
-        public = dict(payload)
-        public["images"] = public_image_entries(public.get("images") or [])
-        return public
-    if event_type == "delta":
-        return rewrite_kb_image_urls_in_markdown(str(payload))
-    if event_type == "done":
-        return rewrite_kb_image_urls_in_markdown(payload.answer)
-    return payload
-
-
 def _chat_stream_events(question: str, product_id: Optional[str]):
     for event_type, payload in answer_question_stream(question, product_id, None):
         if event_type == "meta":
-            public_payload = _public_stream_payload(event_type, payload)
+            public_payload = dict(payload)
+            public_payload["images"] = public_image_entries(public_payload.get("images") or [])
             yield f"event: meta\ndata: {json.dumps(public_payload, ensure_ascii=False)}\n\n"
         elif event_type == "delta":
-            public_text = _public_stream_payload(event_type, payload)
-            yield f"event: delta\ndata: {json.dumps({'text': public_text}, ensure_ascii=False)}\n\n"
+            yield f"event: delta\ndata: {json.dumps({'text': payload}, ensure_ascii=False)}\n\n"
         elif event_type == "done":
-            public_answer = _public_stream_payload(event_type, payload)
             yield (
                 "event: done\n"
-                f"data: {json.dumps({'answer': public_answer}, ensure_ascii=False)}\n\n"
+                f"data: {json.dumps({'answer': payload.answer}, ensure_ascii=False)}\n\n"
             )
 
 

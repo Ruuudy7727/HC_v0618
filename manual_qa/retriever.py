@@ -508,7 +508,7 @@ def _format_chunk_image_lines(
         )
     if not lines:
         return ""
-    return "配图（回答中请用 ![图注](URL) 紧跟对应段落后插入）:\n" + "\n".join(lines) + "\n"
+    return "配图（回答中请用 [图-N] 占位符紧跟对应段落后插入，勿写 URL）:\n" + "\n".join(lines) + "\n"
 
 
 def format_context(

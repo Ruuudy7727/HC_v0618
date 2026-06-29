@@ -7,6 +7,7 @@ from typing import Any, Dict, Iterator, List, Optional, Tuple
 
 from config import get_product_by_id
 from core.gemini_chat import gemini_chat_once, gemini_chat_stream
+from core.kb_image_urls import prepare_public_answer
 from manual_qa.prompts import (
     GENERAL_USER_TEMPLATE,
     NO_RESULT_MESSAGE,
@@ -152,7 +153,7 @@ def answer_question(
     )
 
     return ChatResult(
-        answer=answer,
+        answer=prepare_public_answer(answer, prep.image_entries),
         sources=prep.sources,
         product_id=prep.product_id,
         display_name=prep.display_name,
@@ -199,7 +200,7 @@ def answer_question_stream(
     yield (
         "done",
         ChatResult(
-            answer="".join(answer_parts),
+            answer=prepare_public_answer("".join(answer_parts), prep.image_entries),
             sources=prep.sources,
             product_id=prep.product_id,
             display_name=prep.display_name,
