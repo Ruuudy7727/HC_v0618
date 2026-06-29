@@ -145,9 +145,10 @@ Accept: text/event-stream
 **前端处理建议**
 
 1. 收到 `meta` 后立即渲染 `sources`
-2. 每收到 `delta` 将 `text` 追加到当前回答气泡
-3. 收到 `done` 后关闭 Loading；可用 `answer` 做最终校验
-4. 使用 `fetch` + `ReadableStream` 或 `EventSource` 均可（POST 需用 fetch）
+2. 每收到 `delta` 将 `text` 追加到当前回答气泡，可用 Markdown 渲染器实时展示文字与列表
+3. 收到 `done` 后关闭 Loading，**建议用 `answer` 覆盖当前气泡内容**（`answer` 含后处理后的完整 Markdown，含 `![...](/kb_images/...)` 图片；`delta` 阶段仅为 LLM 原始增量，图片占位符 `[图-N]` 尚未替换）
+4. 若不需要流式预览，也可仅在收到 `done` 后一次性 Markdown 渲染
+5. 使用 `fetch` + `ReadableStream` 或 `EventSource` 均可（POST 需用 fetch）
 
 **性能说明**
 
@@ -198,7 +199,7 @@ Content-Type: application/json
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
-| `answer` | string | AI 回答，Markdown 格式，可能含图片链接 |
+| `answer` | string | AI 回答，标准 Markdown（段落、列表、加粗、图片），可能含 `/kb_images/` 图片链接 |
 | `sources` | array | 参考来源列表 |
 | `product_id` | string \| null | 实际检索使用的产品 ID |
 | `display_name` | string | 产品显示名；通用模式为「全部产品」 |
@@ -207,7 +208,7 @@ Content-Type: application/json
 
 ```json
 {
-  "answer": "根据手册，登录平台步骤如下：\n\n1. 打开浏览器访问平台地址\n2. 输入账号密码\n\n![登录界面](/kb_images/xxx.png)",
+  "answer": "登录平台需先打开浏览器访问指定地址，输入账号密码后点击 **登录**。\n\n操作步骤：\n\n1. 打开浏览器，输入平台地址\n2. 在登录页填写账号和密码\n3. 点击 **登录** 按钮进入首页\n\n登录界面如下所示，右上角为账号输入框：\n\n![登录界面](/kb_images/doc-xxx/abc.png)\n\n*(章节: 登录平台)*",
   "sources": [
     {
       "product_id": "residential-platform-guide",
@@ -435,7 +436,7 @@ await askQuestionStream(
   'residential-platform-guide',
   (meta) => renderSources(meta.sources),
   (text) => { answer += text; renderMarkdown(answer); },
-  (finalAnswer) => console.log('done', finalAnswer),
+  (finalAnswer) => { answer = finalAnswer; renderMarkdown(answer); },  // done 时用完整 answer 覆盖，确保图片显示
 );
 
 // 一次性使用示例
@@ -491,7 +492,7 @@ function renderSources(sources) {
 - [ ] `POST /api/v1/chat/stream` 流式问答有逐段输出
 - [ ] `POST /api/v1/chat` 通用问答（不传 product_id）有正常回答
 - [ ] `POST /api/v1/chat` 指定 product_id 有正常回答
-- [ ] Markdown 渲染正常（标题、列表、加粗等）
+- [ ] Markdown 渲染正常（段落、列表、加粗、斜体引用等）
 - [ ] `/kb_images/` 图片能正常显示
 - [ ] 已确认跨域方案（如需要）
 - [ ] Loading 和超时（建议 120s）已处理
