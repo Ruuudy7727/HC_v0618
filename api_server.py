@@ -64,7 +64,14 @@ class ReindexRequest(BaseModel):
 
 @app.on_event("startup")  # noqa: deprecated but simple for Phase 1
 async def startup() -> None:
+    from core.kb_image_urls import api_public_base_url
+
     init_local_kb()
+    base = api_public_base_url()
+    if base:
+        print(f"[startup] API_PUBLIC_URL loaded: {base}")
+    else:
+        print("[warn] API_PUBLIC_URL / GRADIO_PUBLIC_URL 未设置，answer 内图片将为相对路径")
 
 
 @app.get("/")

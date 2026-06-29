@@ -97,10 +97,21 @@ def rewrite_kb_image_urls_in_markdown(text: str) -> str:
     return _MD_IMAGE_RE.sub(_repl, text or "")
 
 
+def sanitize_all_kb_image_references(text: str) -> str:
+    """修正正文中所有 kb 配图引用（含 LLM 幻觉的裸 URL，如 kb.aliyun.com/kb_images/...）。"""
+
+    def _repl(match: re.Match) -> str:
+        rel = match.group(1)
+        return public_kb_image_url(rel)
+
+    return _DOC_IMAGE_RE.sub(_repl, text or "")
+
+
 def prepare_public_answer(text: str, entries: List[Dict[str, Any]]) -> str:
-    """方案 B：先用 catalog 注入 [图-N]，再修正 LLM 可能误写的 Markdown 图片 URL。"""
+    """先用 catalog 注入 [图-N]，再修正 Markdown 图片与裸 URL（覆盖 LLM 幻觉域名）。"""
     text = inject_catalog_images_into_markdown(text, entries)
-    return rewrite_kb_image_urls_in_markdown(text)
+    text = rewrite_kb_image_urls_in_markdown(text)
+    return sanitize_all_kb_image_references(text)
 
 
 def public_image_entries(entries: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
