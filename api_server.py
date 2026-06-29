@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Optional
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Query
-from fastapi.responses import StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -33,6 +33,7 @@ from manual_qa.agent import answer_question, answer_question_stream
 PUBLIC_API_TOKEN = os.getenv("PUBLIC_API_TOKEN", "changeme")
 KB_IMAGES_DIR = PROJECT_ROOT / "rag_data" / "all" / "images"
 KB_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+FRONTEND_DIR = PROJECT_ROOT / "frontend"
 
 app = FastAPI(title="Manual QA Agent API", version="1.0.0")
 app.mount("/kb_images", StaticFiles(directory=str(KB_IMAGES_DIR)), name="kb_images")
@@ -76,7 +77,16 @@ async def startup() -> None:
 
 @app.get("/")
 async def root() -> Dict[str, str]:
-    return {"message": "Manual QA Agent API", "docs": "/docs"}
+    return {"message": "Manual QA Agent API", "docs": "/docs", "demo": "/demo"}
+
+
+@app.get("/demo")
+async def demo_page() -> FileResponse:
+    """简易测试前端，用于验证流式问答与 Markdown 图片渲染。"""
+    index = FRONTEND_DIR / "index.html"
+    if not index.is_file():
+        raise HTTPException(status_code=404, detail="frontend/index.html not found")
+    return FileResponse(index)
 
 
 @app.get("/api/v1/products")

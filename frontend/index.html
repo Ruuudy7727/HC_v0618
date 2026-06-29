@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>户储平台使用指南 — API 测试</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    :root {
+      --bg: #f4f6f9;
+      --panel: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --muted: #64748b;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --user-bg: #dbeafe;
+      --bot-bg: #ffffff;
+      --danger: #dc2626;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .config {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      flex: 1;
+      align-items: center;
+    }
+    .config label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .config input, .config select {
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 13px;
+      background: #fff;
+    }
+    .config input[type="text"] { min-width: 180px; }
+    .config input#baseUrl { min-width: 260px; }
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 960px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px;
+      min-height: 0;
+    }
+    #chat {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 4px 2px 12px;
+      min-height: 0;
+    }
+    .msg {
+      max-width: 92%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      line-height: 1.65;
+      font-size: 14px;
+      word-break: break-word;
+    }
+    .msg.user {
+      align-self: flex-end;
+      background: var(--user-bg);
+      border-bottom-right-radius: 4px;
+    }
+    .msg.bot {
+      align-self: flex-start;
+      background: var(--bot-bg);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 4px;
+      width: 100%;
+      max-width: 100%;
+    }
+    .msg .md :is(p, ul, ol) { margin: 0.5em 0; }
+    .msg .md :is(p:first-child, ul:first-child, ol:first-child) { margin-top: 0; }
+    .msg .md :is(p:last-child, ul:last-child, ol:last-child) { margin-bottom: 0; }
+    .msg .md img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin: 8px 0;
+      display: block;
+    }
+    .msg .md strong { font-weight: 600; }
+    .msg .md em { color: var(--muted); font-style: normal; font-size: 13px; }
+    .sources {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .sources summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .source-item {
+      padding: 6px 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .source-item:last-child { border-bottom: none; }
+    .status-bar {
+      font-size: 12px;
+      color: var(--muted);
+      padding: 4px 0 10px;
+      min-height: 22px;
+    }
+    .status-bar.error { color: var(--danger); }
+    .status-bar.loading::before {
+      content: "";
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-right: 6px;
+      vertical-align: -2px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .input-area {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+    #question {
+      flex: 1;
+      border: none;
+      resize: none;
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 44px;
+      max-height: 160px;
+      outline: none;
+      font-family: inherit;
+    }
+    .btn {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+    .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+    .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .empty-hint {
+      text-align: center;
+      color: var(--muted);
+      margin: auto;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>户储平台问答 API 测试</h1>
+    <div class="config">
+      <label>API 地址 <input id="baseUrl" type="text" placeholder="http://127.0.0.1:50200" /></label>
+      <label>Token <input id="token" type="text" placeholder="changeme" /></label>
+      <label>文档
+        <select id="productSelect">
+          <option value="">加载中…</option>
+        </select>
+      </label>
+      <button class="btn btn-ghost" id="saveConfigBtn" type="button">保存配置</button>
+    </div>
+  </header>
+
+  <main>
+    <div id="chat">
+      <div class="empty-hint" id="emptyHint">
+        选择文档并输入问题，按 Enter 发送（Shift+Enter 换行）<br />
+        本页由 <code>/demo</code> 提供，对接 <code>api_server.py</code> 流式接口
+      </div>
+    </div>
+    <div class="status-bar" id="statusBar"></div>
+    <div class="input-area">
+      <textarea id="question" rows="2" placeholder="例如：如何登录平台？"></textarea>
+      <button class="btn btn-primary" id="sendBtn" type="button">发送</button>
+    </div>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "hc_qa_demo_config";
+    const chatEl = document.getElementById("chat");
+    const emptyHint = document.getElementById("emptyHint");
+    const statusBar = document.getElementById("statusBar");
+    const baseUrlInput = document.getElementById("baseUrl");
+    const tokenInput = document.getElementById("token");
+    const productSelect = document.getElementById("productSelect");
+    const questionInput = document.getElementById("question");
+    const sendBtn = document.getElementById("sendBtn");
+    const saveConfigBtn = document.getElementById("saveConfigBtn");
+
+    let abortController = null;
+
+    marked.setOptions({ breaks: true, gfm: true });
+
+    function loadConfig() {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+      baseUrlInput.value = saved.baseUrl || window.location.origin;
+      tokenInput.value = saved.token || "changeme";
+    }
+
+    function saveConfig() {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ baseUrl: baseUrlInput.value.trim(), token: tokenInput.value.trim() })
+      );
+      setStatus("配置已保存");
+    }
+
+    function baseUrl() {
+      return baseUrlInput.value.trim().replace(/\/+$/, "");
+    }
+
+    function setStatus(text, { error = false, loading = false } = {}) {
+      statusBar.textContent = text || "";
+      statusBar.className = "status-bar" + (error ? " error" : "") + (loading ? " loading" : "");
+    }
+
+    function fixImageUrls(markdown) {
+      const base = baseUrl();
+      return markdown.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, alt, url) => {
+        let resolved = url.trim();
+        if (resolved.startsWith("/kb_images/")) {
+          resolved = base + resolved;
+        }
+        return `![${alt}](${resolved})`;
+      });
+    }
+
+    function renderMarkdown(text) {
+      return marked.parse(fixImageUrls(text || ""));
+    }
+
+    function appendMessage(role, htmlContent, sources) {
+      emptyHint.style.display = "none";
+      const div = document.createElement("div");
+      div.className = "msg " + role;
+      const md = document.createElement("div");
+      md.className = "md";
+      md.innerHTML = htmlContent;
+      div.appendChild(md);
+
+      if (sources && sources.length) {
+        const src = document.createElement("details");
+        src.className = "sources";
+        src.open = false;
+        src.innerHTML = `<summary>参考来源 (${sources.length})</summary>`;
+        sources.forEach((s) => {
+          const item = document.createElement("div");
+          item.className = "source-item";
+          item.innerHTML =
+            `<strong>${escapeHtml(s.display_name || "")}</strong> · ${escapeHtml(s.section_title || "")}` +
+            `<br />相关度 ${(s.score ?? 0).toFixed(3)} · ${escapeHtml(s.snippet || "")}`;
+          src.appendChild(item);
+        });
+        div.appendChild(src);
+      }
+
+      chatEl.appendChild(div);
+      chatEl.scrollTop = chatEl.scrollHeight;
+      return div;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    async function loadProducts() {
+      const token = tokenInput.value.trim();
+      productSelect.innerHTML = '<option value="">加载中…</option>';
+      try {
+        const res = await fetch(`${baseUrl()}/api/v1/products?token=${encodeURIComponent(token)}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        productSelect.innerHTML = "";
+        const general = document.createElement("option");
+        general.value = "";
+        general.textContent = "通用问答（全部指南）";
+        productSelect.appendChild(general);
+
+        (data.series || []).forEach((series) => {
+          (series.products || []).forEach((p) => {
+            const opt = document.createElement("option");
+            opt.value = p.id;
+            opt.textContent = `[${series.name}] ${p.display_name}`;
+            productSelect.appendChild(opt);
+          });
+        });
+        setStatus("文档列表已加载");
+      } catch (err) {
+        productSelect.innerHTML = '<option value="">加载失败</option>';
+        setStatus("加载文档列表失败: " + err.message, { error: true });
+      }
+    }
+
+    function parseSseChunk(buffer) {
+      const events = [];
+      const parts = buffer.split("\n\n");
+      const rest = parts.pop() || "";
+      for (const part of parts) {
+        if (!part.trim()) continue;
+        let event = "message";
+        let data = "";
+        for (const line of part.split("\n")) {
+          if (line.startsWith("event:")) event = line.slice(6).trim();
+          if (line.startsWith("data:")) data += line.slice(5).trim();
+        }
+        if (data) {
+          try {
+            events.push({ event, data: JSON.parse(data) });
+          } catch (_) {
+            /* ignore malformed */
+          }
+        }
+      }
+      return { events, rest };
+    }
+
+    async function askStream(question, productId) {
+      abortController = new AbortController();
+      sendBtn.disabled = true;
+      setStatus("检索中，请稍候…", { loading: true });
+
+      appendMessage("user", escapeHtml(question).replace(/\n/g, "<br />"));
+      const botDiv = appendMessage("bot", "<em>思考中…</em>");
+      const mdEl = botDiv.querySelector(".md");
+      let sources = [];
+      let accumulated = "";
+
+      try {
+        const res = await fetch(`${baseUrl()}/api/v1/chat/stream`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "text/event-stream",
+          },
+          body: JSON.stringify({
+            token: tokenInput.value.trim(),
+            question,
+            product_id: productId || null,
+          }),
+          signal: abortController.signal,
+        });
+
+        if (!res.ok) {
+          const errText = await res.text();
+          throw new Error(`HTTP ${res.status}: ${errText.slice(0, 200)}`);
+        }
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+
+          const { events, rest } = parseSseChunk(buffer);
+          buffer = rest;
+
+          for (const { event, data } of events) {
+            if (event === "meta") {
+              sources = data.sources || [];
+              setStatus(`检索完成 · ${data.display_name || "全部产品"}`, { loading: true });
+            } else if (event === "delta") {
+              accumulated += data.text || "";
+              mdEl.innerHTML = renderMarkdown(accumulated);
+              chatEl.scrollTop = chatEl.scrollHeight;
+              setStatus("生成中…", { loading: true });
+            } else if (event === "done") {
+              accumulated = data.answer || accumulated;
+              mdEl.innerHTML = renderMarkdown(accumulated);
+              if (sources.length) {
+                const existing = botDiv.querySelector(".sources");
+                if (existing) existing.remove();
+                const src = document.createElement("details");
+                src.className = "sources";
+                src.innerHTML = `<summary>参考来源 (${sources.length})</summary>`;
+                sources.forEach((s) => {
+                  const item = document.createElement("div");
+                  item.className = "source-item";
+                  item.innerHTML =
+                    `<strong>${escapeHtml(s.display_name || "")}</strong> · ${escapeHtml(s.section_title || "")}` +
+                    `<br />相关度 ${(s.score ?? 0).toFixed(3)} · ${escapeHtml(s.snippet || "")}`;
+                  src.appendChild(item);
+                });
+                botDiv.appendChild(src);
+              }
+              setStatus("回答完成");
+            } else if (event === "error") {
+              throw new Error(data.error || "服务端错误");
+            }
+          }
+        }
+      } catch (err) {
+        if (err.name === "AbortError") {
+          mdEl.innerHTML = renderMarkdown(accumulated || "_已取消_");
+          setStatus("已取消");
+        } else {
+          mdEl.innerHTML = `<span style="color:var(--danger)">请求失败: ${escapeHtml(err.message)}</span>`;
+          setStatus("请求失败", { error: true });
+        }
+      } finally {
+        sendBtn.disabled = false;
+        abortController = null;
+      }
+    }
+
+    function sendQuestion() {
+      const q = questionInput.value.trim();
+      if (!q) return;
+      if (abortController) {
+        abortController.abort();
+      }
+      questionInput.value = "";
+      const productId = productSelect.value || null;
+      askStream(q, productId);
+    }
+
+    saveConfigBtn.addEventListener("click", () => {
+      saveConfig();
+      loadProducts();
+    });
+
+    sendBtn.addEventListener("click", sendQuestion);
+    questionInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendQuestion();
+      }
+    });
+
+    loadConfig();
+    loadProducts();
+  </script>
+</body>
+</html>
