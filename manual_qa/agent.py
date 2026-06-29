@@ -37,6 +37,7 @@ class _ChatPrep:
     early_result: Optional[ChatResult] = None
     user_prompt: str = ""
     image_paths: Optional[List[str]] = None
+    image_entries: List[Dict[str, Any]] = field(default_factory=list)
     sources: List[Dict[str, Any]] = field(default_factory=list)
     product_id: Optional[str] = None
     display_name: str = "全部产品"
@@ -113,9 +114,20 @@ def _prepare_chat(
 
     user_prompt += history_block
 
+    image_entries = [
+        {
+            "image_id": entry.image_id,
+            "display_url": entry.display_url,
+            "abs_path": entry.abs_path,
+            "caption_hint": entry.caption_hint,
+        }
+        for entry in image_catalog.entries
+    ]
+
     return _ChatPrep(
         user_prompt=user_prompt,
         image_paths=image_abs_paths or None,
+        image_entries=image_entries,
         sources=_chunks_to_sources(chunks),
         product_id=product_id,
         display_name=display_name,
@@ -162,6 +174,7 @@ def answer_question_stream(
         "sources": prep.sources,
         "product_id": prep.product_id,
         "display_name": prep.display_name,
+        "images": prep.image_entries,
     }
 
     if prep.early_result:
